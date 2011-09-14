@@ -3,7 +3,7 @@ Django Social Auth
 ==================
 
 Django Social Auth is an easy to setup social authentication/authorization
-mechanism for Django projects.
+mechanism for Django projects
 
 Crafted using base code from django-twitter-oauth_ and django-openid-auth_,
 implements a common interface to define new authentication providers from
