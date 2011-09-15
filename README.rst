@@ -51,6 +51,16 @@ credentials, some features are:
 - Custom User model override if needed (`auth.User`_ by default)
 
 
+
+-----------
+Differences
+-----------
+
+Differences from original version:
+
+- If you use FaceBook on two sites, you may create two different apps and use it.
+
+
 ------------
 Dependencies
 ------------

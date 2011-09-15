@@ -5,6 +5,8 @@ Notes:
       on third party providers that (if using POST) won't be sending crfs
       token back.
 """
+import urllib2
+
 from functools import wraps
 
 from django.conf import settings
@@ -150,7 +152,23 @@ def auth_process(request, backend):
 
 def complete_process(request, backend):
     """Authentication complete process"""
-    user = auth_complete(request, backend)
+    try:
+        user = auth_complete(request, backend)
+    except urllib2.HTTPError:
+        # todo: if backend != google then raise
+        attempts_left = _setting('GOOGLE_ATTEMPTS_AUTHORIZE_COUNT', 1)
+        while attempts_left > 0:
+            try:
+                attempts_left -= 1
+                time.sleep(_setting('GOOGLE_ATTEMPTS_AUTHORIZE_DELAY', 1000) / 1000)
+                user = auth_complete(request, backend)
+            except urllib2.HTTPError:
+                if attempts_left == 0:
+                    raise
+                else:
+                    continue
+            else:
+                break
 
     if user and getattr(user, 'is_active', True):
         login(request, user)

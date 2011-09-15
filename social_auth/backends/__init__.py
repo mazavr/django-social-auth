@@ -71,6 +71,7 @@ USERNAME_MAX_LENGTH = User._meta.get_field(USERNAME).max_length
 def _setting(name, default=None):
     return getattr(settings, name, default)
 
+HOLD_SOCIAL_USER = _setting('SOCIAL_AUTH_HOLD_SOCIAL_USER_FOR_ANONYMOUS', False)
 CREATE_USERS = _setting('SOCIAL_AUTH_CREATE_USERS', True)
 ASSOCIATE_BY_MAIL = _setting('SOCIAL_AUTH_ASSOCIATE_BY_MAIL', False)
 LOAD_EXTRA_DATA = _setting('SOCIAL_AUTH_EXTRA_DATA', True)
@@ -109,6 +110,21 @@ class SocialAuthBackend(ModelBackend):
         try:
             social_user = self.get_social_auth_user(uid)
         except UserSocialAuth.DoesNotExist:
+            if user is None and HOLD_SOCIAL_USER and not CREATE_USERS:
+                # create user, and create social user in session
+                # todo: create new user and social_user
+                user = {'is_fake':True}
+                # todo: don't save to DB
+                user.social_auth = UserSocialAuth.objects.create(user=None, uid=uid, provider=self.name)
+                
+                if LOAD_EXTRA_DATA:
+                    extra_data = self.extra_data(user, uid, response, details)
+                    if extra_data and social_user.extra_data != extra_data:
+                        social_user.extra_data = extra_data
+                        social_user.save()
+                
+                return user
+            
             if user is None:  # new user
                 if not CREATE_USERS:
                     return None

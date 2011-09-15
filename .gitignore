@@ -17,3 +17,5 @@ example/oauth2/
 example/*.zip
 example/*.gz
 example/runserver.bat
+.project
+.pydevproject
