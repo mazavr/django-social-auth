@@ -10,3 +10,10 @@ env/
 doc/_build
 example/templates/script*.html
 contrib/tests/test_settings.py
+
+example/httplib2/
+example/openid/
+example/oauth2/
+example/*.zip
+example/*.gz
+example/runserver.bat
