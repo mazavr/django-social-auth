@@ -58,7 +58,7 @@ Differences
 
 Differences from original version:
 
-- If you use FaceBook on two sites, you may create two different apps and use it.
+- If you use FaceBook on two sites and you are using one user DB, you may create two different apps and use it.
 
 
 ------------
