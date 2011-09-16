@@ -51,6 +51,12 @@ credentials, some features are:
 - Custom User model override if needed (`auth.User`_ by default)
 
 
+-------------------------
+Differences from original
+-------------------------
+
+Coming soon...
+
 ------------
 Dependencies
 ------------
