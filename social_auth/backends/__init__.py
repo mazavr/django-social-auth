@@ -80,7 +80,7 @@ USERNAME_FIXER = _setting('SOCIAL_AUTH_USERNAME_FIXER', lambda u: u)
 DEFAULT_USERNAME = _setting('SOCIAL_AUTH_DEFAULT_USERNAME')
 CHANGE_SIGNAL_ONLY = _setting('SOCIAL_AUTH_CHANGE_SIGNAL_ONLY', False)
 UUID_LENGHT = _setting('SOCIAL_AUTH_UUID_LENGTH', 16)
-SESSION_USER_NAME = _setting('SESSION_USER_NAME', 'tmp_social_auth')
+#SESSION_USER_NAME = _setting('SESSION_USER_NAME', 'tmp_social_auth')
 
 
 class SocialAuthBackend(ModelBackend):
@@ -114,15 +114,15 @@ class SocialAuthBackend(ModelBackend):
             if user is None and HOLD_SOCIAL_USER and not CREATE_USERS:
                 # create fake user, and create social user in session
                 user = User(is_fake=True)
-                social_auth = UserSocialAuth(user=user, uid=uid, provider=self.name)
-                user.social_auth = social_auth
+                social_user = UserSocialAuth(user=user, uid=uid, provider=self.name)
+                user.social_user = social_user
                 
                 if LOAD_EXTRA_DATA:
                     extra_data = self.extra_data(user, uid, response, details)
                     if extra_data and social_user.extra_data != extra_data:
                         social_user.extra_data = extra_data
                         # todo: get request
-                        self.request.session[SESSION_USER_NAME] = UserSocialAuth.objects.get(id=social_user.id)
+                        #self.request.session[SESSION_USER_NAME] = UserSocialAuth.objects.get(id=social_user.id)
                         #request.session['tmpUserProfile'] = user.get_profile()
                 
                 return user

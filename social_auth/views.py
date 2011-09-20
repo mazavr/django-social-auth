@@ -43,6 +43,8 @@ BACKEND_ERROR_REDIRECT = _setting('SOCIAL_AUTH_BACKEND_ERROR_URL',
 ERROR_KEY = _setting('SOCIAL_AUTH_BACKEND_ERROR', 'socialauth_backend_error')
 NAME_KEY = _setting('SOCIAL_AUTH_BACKEND_KEY', 'socialauth_backend_name')
 SANITIZE_REDIRECTS = _setting('SOCIAL_AUTH_SANITIZE_REDIRECTS', True)
+SESSION_USER_NAME = _setting('SESSION_USER_NAME', 'tmp_social_auth')
+LOGIN_WITH_LINKED_SOCIAL_ACCOUNT_PAGE = _setting('LOGIN_WITH_LINKED_SOCIAL_ACCOUNT_PAGE', None)
 
 
 def dsa_view(redirect_name=None):
@@ -171,7 +173,8 @@ def complete_process(request, backend):
                 break
 
     if user and getattr(user, 'is_active', True):
-        login(request, user)
+        if not getattr(user, 'is_fake', False):
+            login(request, user)
         # user.social_user is the used UserSocialAuth instance defined
         # in authenticate process
         social_user = user.social_user
@@ -192,6 +195,12 @@ def complete_process(request, backend):
                                    getattr(user, 'is_new', False) else \
               request.session.pop(REDIRECT_FIELD_NAME, '') or \
               DEFAULT_REDIRECT
+        
+        if getattr(user, 'is_fake', True) and user.social_user:
+            request.session[SESSION_USER_NAME] = social_user
+            if not LOGIN_WITH_LINKED_SOCIAL_ACCOUNT_PAGE:
+                raise Exception('LOGIN_WITH_LINKED_SOCIAL_ACCOUNT_PAGE is not defined')
+            url = reverse(LOGIN_WITH_LINKED_SOCIAL_ACCOUNT_PAGE)
     else:
         url = LOGIN_ERROR_URL
     return HttpResponseRedirect(url)
