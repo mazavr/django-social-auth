@@ -111,9 +111,16 @@ class SocialAuthBackend(ModelBackend):
         try:
             social_user = self.get_social_auth_user(uid)
         except UserSocialAuth.DoesNotExist:
+            
+            
+            #raise Exception('1')
             if user is None and HOLD_SOCIAL_USER and not CREATE_USERS:
+                #raise Exception('2')
                 # create fake user, and create social user in session
-                user = User(is_fake=True)
+                #raise Exception('2')
+                user = User()
+                user.is_fake = True
+                #raise Exception('22')
                 social_user = UserSocialAuth(user=user, uid=uid, provider=self.name)
                 user.social_user = social_user
                 
@@ -124,9 +131,9 @@ class SocialAuthBackend(ModelBackend):
                         # todo: get request
                         #self.request.session[SESSION_USER_NAME] = UserSocialAuth.objects.get(id=social_user.id)
                         #request.session['tmpUserProfile'] = user.get_profile()
-                
+                #raise Exception('3')
                 return user
-            
+            #raise Exception('4')
             if user is None:  # new user
                 if not CREATE_USERS:
                     return None

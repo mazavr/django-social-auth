@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib import admin
 
-from app.views import home, done, logout, error
+from app.views import home, done, logout, error, login_with_linked_social_user
 
 
 admin.autodiscover()
@@ -12,5 +12,8 @@ urlpatterns = patterns('',
     url(r'^error/$', error, name='error'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'', include('social_auth.urls')),
+    url(r'accounts/', include('social_auth.urls')),
+    url(r'^accounts/error/$', error, name='error2'),
+    url(r'^login_with_linked_social_user/$', login_with_linked_social_user, name='login_with_linked_social_user'),
+    
 )
