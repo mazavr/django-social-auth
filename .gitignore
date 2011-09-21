@@ -19,3 +19,4 @@ example/*.gz
 example/runserver.bat
 .project
 .pydevproject
+*.orig
