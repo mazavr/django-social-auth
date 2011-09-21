@@ -43,6 +43,10 @@ class FacebookBackend(OAuthBackend):
                 'fullname': response['name'],
                 'first_name': response.get('first_name', ''),
                 'last_name': response.get('last_name', '')}
+        
+    def get_user_id(self, details, response):
+        "OAuth providers return an unique user id in response"""
+        return response['id'] + '#' + settings.FACEBOOK_APP_ID
 
 
 class FacebookAuth(BaseOAuth):

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block heading %}Hello{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+		Do you have our account?
+	</div>
+	<div>
+		<div>
+			{{ login_form.non_field_errors }}
+		</div>
+		<form action="?login" method="POST">{% csrf_token %}
+			<table>
+				{{login_form.as_table}}
+			</table>
+			<br />
+			<input type="submit" value="LogIn and link {{social_user.provider}} account" />
+		</form>
+	</div>
+	<hr />
+	<div>
+		If you don't have our account, you can create it right now.
+	</div>
+	<div>
+		<form action="?create" method="POST">{% csrf_token %}
+			<table>
+				{{registration_form.as_table}}
+			</table>
+			<br />
+			<input type="submit" value="Create new account and link {{social_user.provider}} account to it" />
+		</form>
+	</div>
+	<br />
+</div>
+{% endblock %}
