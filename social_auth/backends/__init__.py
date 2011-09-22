@@ -133,6 +133,10 @@ class SocialAuthBackend(ModelBackend):
                         #self.request.session[SESSION_USER_NAME] = UserSocialAuth.objects.get(id=social_user.id)
                         #request.session['tmpUserProfile'] = user.get_profile()
                 #raise Exception('3')
+                
+                # sending pre_update signal
+                self.update_user_details(user, response, details, is_new)
+                
                 return user
             #raise Exception('4')
             if user is None:  # new user

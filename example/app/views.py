@@ -81,6 +81,7 @@ def login_with_linked_social_user(request):
         return HttpResponseRedirect('/')
      
     social_user = request.session[SESSION_USER_NAME]
+    social_profile = social_user.profile 
     if request.method == 'POST':
         if 'login' == request.META['QUERY_STRING']:
             login_form = LoginForm(request.POST) 
@@ -105,9 +106,10 @@ def login_with_linked_social_user(request):
                 social_user.user = new_user
                 social_user.save()
                 
-                #session_profile = request.session['tmpUserProfile']
-                #session_profile.user = new_user
-                #session_profile.save()
+                if social_profile:
+                    session_profile = social_profile
+                    session_profile.user = new_user
+                    session_profile.save()
                 
                 auth_user = auth.authenticate(username=registration_form.cleaned_data['username'], password=registration_form.cleaned_data['password1'])
                 auth.login(request, auth_user)
