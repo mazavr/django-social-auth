@@ -44,7 +44,7 @@ def facebook_extra_values(sender, user, response, details, **kwargs):
     
     profile.favorite_band = 'la la la'
     _save_profile(profile)
-    return True
+    return not getattr(user, 'is_fake', False)
 
 pre_update.connect(facebook_extra_values, sender=FacebookBackend)
 

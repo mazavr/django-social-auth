@@ -81,7 +81,7 @@ def login_with_linked_social_user(request):
         return HttpResponseRedirect('/')
      
     social_user = request.session[SESSION_USER_NAME]
-    social_profile = social_user.profile 
+    social_profile = getattr(social_user.user, 'profile', None) 
     if request.method == 'POST':
         if 'login' == request.META['QUERY_STRING']:
             login_form = LoginForm(request.POST) 
